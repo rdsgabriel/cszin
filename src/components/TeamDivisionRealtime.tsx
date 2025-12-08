@@ -231,8 +231,14 @@ export function TeamDivisionRealtime({
 
   // Subscribe to realtime updates
   useEffect(() => {
+    if (!matchState?.id) return; // Só inscreve após criar o match_state
+
     const channel = supabase
-      .channel(`match-state-${roomId}`)
+      .channel(`match-state-${roomId}`, {
+        config: {
+          broadcast: { self: true },
+        },
+      })
       .on(
         "postgres_changes",
         {
@@ -262,12 +268,20 @@ export function TeamDivisionRealtime({
           }
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === "SUBSCRIBED") {
+          console.log("✅ Realtime conectado!");
+        } else if (status === "CHANNEL_ERROR") {
+          console.error("❌ Erro no canal realtime");
+        } else if (status === "TIMED_OUT") {
+          console.error("⏱️ Timeout no realtime");
+        }
+      });
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [roomId, playMatchReady, playStepChange]);
+  }, [roomId, matchState?.id, playMatchReady, playStepChange]);
 
   // Update match state in Supabase
   const updateMatchState = useCallback(
@@ -471,19 +485,6 @@ export function TeamDivisionRealtime({
   // Apenas o capitão do turno atual pode interagir (admin NÃO tem privilégios aqui)
   const canInteractWithMaps = isCurrentTurnCaptain;
 
-  // Debug logs
-  console.log("🔍 Debug Permissions:", {
-    currentSessionId,
-    team_a_captain_id: matchState.team_a_captain_id,
-    team_b_captain_id: matchState.team_b_captain_id,
-    current_turn: matchState.current_turn,
-    isTeamACaptain,
-    isTeamBCaptain,
-    isCurrentTurnCaptain,
-    isAdmin,
-    canInteractWithMaps,
-  });
-
   // Get current action
   const totalActions =
     matchState.maps.filter((m) => m.status === "banned").length +
@@ -494,16 +495,6 @@ export function TeamDivisionRealtime({
 
   const canBan = currentAction === "ban";
   const canPick = currentAction === "pick";
-
-  // Debug current action
-  console.log("🎯 Current Action:", {
-    totalActions,
-    orderLength: matchConfig.order.length,
-    currentAction,
-    canBan,
-    canPick,
-    order: matchConfig.order,
-  });
 
   // Get final maps
   const getFinalMaps = () => {
@@ -972,10 +963,7 @@ export function TeamDivisionRealtime({
                   {canInteractWithMaps && isActive ? (
                     <Popover
                       open={openPopover === map.id}
-                      onOpenChange={(open) => {
-                        console.log("🗺️ Map clicked:", mapInfo.name, "open:", open);
-                        setOpenPopover(open ? map.id : null);
-                      }}
+                      onOpenChange={(open) => setOpenPopover(open ? map.id : null)}
                     >
                       <PopoverTrigger asChild>
                         <button
@@ -991,7 +979,6 @@ export function TeamDivisionRealtime({
                       </PopoverTrigger>
                       <PopoverContent className="w-48 p-2">
                         <div className="space-y-1">
-                          {console.log("🎮 Rendering popover for", mapInfo.name, "canBan:", canBan, "canPick:", canPick)}
                           {canBan && (
                             <Button
                               variant="destructive"
