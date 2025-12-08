@@ -178,6 +178,50 @@ const Room = () => {
     joinRoom(nickname);
   };
 
+  // Auto-show team division when match state exists
+  useEffect(() => {
+    if (!roomId) return;
+
+    const checkMatchState = async () => {
+      const { data } = await supabase
+        .from("match_state")
+        .select("id")
+        .eq("room_id", roomId)
+        .maybeSingle();
+
+      if (data) {
+        setShowTeamDivision(true);
+      }
+    };
+
+    checkMatchState();
+
+    // Subscribe to match_state changes
+    const channel = supabase
+      .channel(`match-state-check-${roomId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "match_state",
+          filter: `room_id=eq.${roomId}`,
+        },
+        (payload) => {
+          if (payload.eventType === "INSERT" || payload.eventType === "UPDATE") {
+            setShowTeamDivision(true);
+          } else if (payload.eventType === "DELETE") {
+            setShowTeamDivision(false);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [roomId]);
+
   // Cleanup player on tab/window close
   useEffect(() => {
     if (!roomId || !hasJoined) return;
