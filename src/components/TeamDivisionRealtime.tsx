@@ -966,7 +966,10 @@ export function TeamDivisionRealtime({
                   {canInteractWithMaps && isActive ? (
                     <Popover
                       open={openPopover === map.id}
-                      onOpenChange={(open) => setOpenPopover(open ? map.id : null)}
+                      onOpenChange={(open) => {
+                        console.log("🗺️ Map clicked:", mapInfo.name, "open:", open);
+                        setOpenPopover(open ? map.id : null);
+                      }}
                     >
                       <PopoverTrigger asChild>
                         <button
@@ -982,6 +985,7 @@ export function TeamDivisionRealtime({
                       </PopoverTrigger>
                       <PopoverContent className="w-48 p-2">
                         <div className="space-y-1">
+                          {console.log("🎮 Rendering popover for", mapInfo.name, "canBan:", canBan, "canPick:", canPick)}
                           {canBan && (
                             <Button
                               variant="destructive"
