@@ -148,10 +148,21 @@ const Room = () => {
         },
         (payload) => {
           if (payload.eventType === "INSERT") {
-            setPlayers((prev) => [...prev, payload.new as Player]);
+            const newPlayer = payload.new as Player;
+            setPlayers((prev) => {
+              // Evita duplicação - só adiciona se não existir
+              const exists = prev.some(p => p.id === newPlayer.id);
+              if (exists) return prev;
+              return [...prev, newPlayer];
+            });
           } else if (payload.eventType === "DELETE") {
             setPlayers((prev) =>
               prev.filter((p) => p.id !== (payload.old as Player).id)
+            );
+          } else if (payload.eventType === "UPDATE") {
+            const updatedPlayer = payload.new as Player;
+            setPlayers((prev) =>
+              prev.map(p => p.id === updatedPlayer.id ? updatedPlayer : p)
             );
           }
         }

@@ -470,6 +470,19 @@ export function TeamDivisionRealtime({
 
   const canInteractWithMaps = isCurrentTurnCaptain || isAdmin;
 
+  // Debug logs
+  console.log("🔍 Debug Permissions:", {
+    currentSessionId,
+    team_a_captain_id: matchState.team_a_captain_id,
+    team_b_captain_id: matchState.team_b_captain_id,
+    current_turn: matchState.current_turn,
+    isTeamACaptain,
+    isTeamBCaptain,
+    isCurrentTurnCaptain,
+    isAdmin,
+    canInteractWithMaps,
+  });
+
   // Get current action
   const totalActions =
     matchState.maps.filter((m) => m.status === "banned").length +
@@ -480,6 +493,16 @@ export function TeamDivisionRealtime({
 
   const canBan = currentAction === "ban";
   const canPick = currentAction === "pick";
+
+  // Debug current action
+  console.log("🎯 Current Action:", {
+    totalActions,
+    orderLength: matchConfig.order.length,
+    currentAction,
+    canBan,
+    canPick,
+    order: matchConfig.order,
+  });
 
   // Get final maps
   const getFinalMaps = () => {
@@ -978,6 +1001,11 @@ export function TeamDivisionRealtime({
                             >
                               ✅ Escolher {mapInfo.name}
                             </Button>
+                          )}
+                          {!canBan && !canPick && (
+                            <div className="p-2 text-xs text-muted-foreground text-center">
+                              Nenhuma ação disponível
+                            </div>
                           )}
                         </div>
                       </PopoverContent>
