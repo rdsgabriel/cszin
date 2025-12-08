@@ -468,7 +468,8 @@ export function TeamDivisionRealtime({
     (matchState.current_turn === "teamA" && isTeamACaptain) ||
     (matchState.current_turn === "teamB" && isTeamBCaptain);
 
-  const canInteractWithMaps = isCurrentTurnCaptain || isAdmin;
+  // Apenas o capitão do turno atual pode interagir (admin NÃO tem privilégios aqui)
+  const canInteractWithMaps = isCurrentTurnCaptain;
 
   // Debug logs
   console.log("🔍 Debug Permissions:", {
@@ -938,14 +939,19 @@ export function TeamDivisionRealtime({
             {!canInteractWithMaps && (
               <div className="mt-3 p-2 rounded bg-secondary/50 border border-border">
                 <p className="text-xs text-muted-foreground text-center">
-                  👀 Aguardando o capitão fazer a escolha...
+                  👀 Aguardando o capitão {matchState.current_turn === "teamA" ? "do Time A" : "do Time B"} fazer a escolha...
+                  {isAnyCaptain && !isCurrentTurnCaptain && (
+                    <span className="block mt-1 text-yellow-500">
+                      ⏳ Você é capitão, mas não é sua vez ainda!
+                    </span>
+                  )}
                 </p>
               </div>
             )}
-            {canInteractWithMaps && isCurrentTurnCaptain && (
-              <div className="mt-3 p-2 rounded bg-primary/20 border border-primary">
+            {canInteractWithMaps && (
+              <div className="mt-3 p-2 rounded bg-primary/20 border border-primary animate-pulse">
                 <p className="text-xs text-primary text-center font-semibold">
-                  👑 É sua vez! {currentAction === "ban" ? "Escolha um mapa para BANIR" : "Escolha um mapa para JOGAR"}
+                  👑 É SUA VEZ! {currentAction === "ban" ? "Clique em um mapa para BANIR" : "Clique em um mapa para ESCOLHER"}
                 </p>
               </div>
             )}
