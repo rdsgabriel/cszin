@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    --background: 220 25% 5%;
+    --foreground: 210 20% 90%;
+
+    --card: 220 20% 8%;
+    --card-foreground: 210 20% 90%;
+
+    --popover: 220 20% 10%;
+    --popover-foreground: 210 20% 90%;
+
+    --primary: 35 95% 55%;
+    --primary-foreground: 220 25% 5%;
+
+    --secondary: 215 20% 15%;
+    --secondary-foreground: 210 20% 85%;
+
+    --muted: 215 15% 18%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 35 90% 50%;
+    --accent-foreground: 220 25% 5%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 215 20% 18%;
+    --input: 215 20% 15%;
+    --ring: 35 95% 55%;
+
+    --radius: 0.5rem;
+
+    /* Custom CS2 colors */
+    --cs2-charcoal: 220 25% 5%;
+    --cs2-slate: 215 20% 12%;
+    --cs2-slate-light: 215 18% 20%;
+    --cs2-gold: 35 95% 55%;
+    --cs2-gold-dim: 35 70% 40%;
+    --cs2-orange: 25 95% 50%;
+    --cs2-teal: 180 40% 40%;
+    --cs2-text: 210 20% 90%;
+    --cs2-text-dim: 215 15% 55%;
+
+    /* Glow effects */
+    --glow-gold: 0 0 20px hsl(35 95% 55% / 0.4);
+    --glow-gold-intense: 0 0 30px hsl(35 95% 55% / 0.6);
+
+    --sidebar-background: 220 25% 5%;
+    --sidebar-foreground: 210 20% 90%;
+    --sidebar-primary: 35 95% 55%;
+    --sidebar-primary-foreground: 220 25% 5%;
+    --sidebar-accent: 215 20% 15%;
+    --sidebar-accent-foreground: 210 20% 90%;
+    --sidebar-border: 215 20% 18%;
+    --sidebar-ring: 35 95% 55%;
+  }
+
+  .dark {
+    --background: 220 25% 5%;
+    --foreground: 210 20% 90%;
+    --card: 220 20% 8%;
+    --card-foreground: 210 20% 90%;
+    --popover: 220 20% 10%;
+    --popover-foreground: 210 20% 90%;
+    --primary: 35 95% 55%;
+    --primary-foreground: 220 25% 5%;
+    --secondary: 215 20% 15%;
+    --secondary-foreground: 210 20% 85%;
+    --muted: 215 15% 18%;
+    --muted-foreground: 215 15% 55%;
+    --accent: 35 90% 50%;
+    --accent-foreground: 220 25% 5%;
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 20% 18%;
+    --input: 215 20% 15%;
+    --ring: 35 95% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply dark;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+}
+
+@layer utilities {
+  /* Tactical hexagon background pattern */
+  .bg-tactical-hex {
+    background-image: 
+      linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 30%, transparent 70%, hsl(var(--background)) 100%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='hexagons' fill='%23ffffff' fill-opacity='0.02' fill-rule='nonzero'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  /* Glow effects */
+  .glow-gold {
+    box-shadow: var(--glow-gold);
+  }
+
+  .glow-gold-intense {
+    box-shadow: var(--glow-gold-intense);
+  }
+
+  .hover-glow-gold {
+    @apply transition-shadow duration-300;
+  }
+
+  .hover-glow-gold:hover {
+    box-shadow: var(--glow-gold);
+  }
+
+  /* Border glow */
+  .border-glow {
+    @apply relative;
+  }
+
+  .border-glow::before {
+    content: '';
+    @apply absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300;
+    box-shadow: inset 0 0 0 1px hsl(var(--cs2-gold) / 0.5);
+  }
+
+  .border-glow:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Tactical card styling */
+  .tactical-card {
+    @apply bg-card border border-border rounded-lg backdrop-blur-sm;
+    background: linear-gradient(135deg, hsl(var(--cs2-slate)) 0%, hsl(var(--cs2-charcoal)) 100%);
+  }
+
+  /* CS2 style button */
+  .btn-cs2-primary {
+    @apply bg-primary text-primary-foreground font-semibold uppercase tracking-wider;
+    @apply transition-all duration-200;
+    @apply hover:brightness-110;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+
+  .btn-cs2-primary:hover {
+    box-shadow: var(--glow-gold);
+  }
+
+  /* Text gradient */
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-amber-400 via-orange-500 to-amber-400 bg-clip-text text-transparent;
+  }
+
+  /* Animation keyframes */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px hsl(35 95% 55% / 0.3);
+    }
+    50% {
+      box-shadow: 0 0 35px hsl(35 95% 55% / 0.5);
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes scan-line {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100vh);
+    }
+  }
+
+  .scan-line::after {
+    content: '';
+    @apply absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent;
+    animation: scan-line 4s linear infinite;
+  }
+}
