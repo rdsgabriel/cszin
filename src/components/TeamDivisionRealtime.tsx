@@ -142,9 +142,9 @@ export function TeamDivisionRealtime({
         // Try to fetch existing match state
         const { data: existing, error: fetchError } = await supabase
           .from("match_state")
-          .select("*")
+          .select("id,room_id,team_format,match_format,current_step,team_a_name,team_a_players,team_a_captain_id,team_b_name,team_b_players,team_b_captain_id,maps,current_turn,ban_history,updated_at")
           .eq("room_id", roomId)
-          .single();
+          .maybeSingle();
 
         if (fetchError && fetchError.code !== "PGRST116") {
           console.error("Error fetching match state:", fetchError);
