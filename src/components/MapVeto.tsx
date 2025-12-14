@@ -10,13 +10,13 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // CS2 Competitive Map Pool
 const CS2_MAPS = [
-  { id: "mirage", name: "Mirage", image: "🏜️" },
+  { id: "dust2", name: "Dust 2", image: "🏜️" },
+  { id: "mirage", name: "Mirage", image: "🗺️" },
   { id: "inferno", name: "Inferno", image: "🔥" },
-  { id: "nuke", name: "Nuke", image: "☢️" },
+  { id: "train", name: "Train", image: "🚂" },
   { id: "overpass", name: "Overpass", image: "🌉" },
   { id: "ancient", name: "Ancient", image: "🏛️" },
-  { id: "anubis", name: "Anubis", image: "🐍" },
-  { id: "vertigo", name: "Vertigo", image: "🏗️" },
+  { id: "nuke", name: "Nuke", image: "☢️" },
 ];
 
 type MapStatus = "active" | "banned" | "pickA" | "pickB" | "decider";
